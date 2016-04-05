@@ -1,0 +1,24 @@
+* {}
+.clearfix:after {
+    content: "";
+    display: block;
+    clear: both;
+}
+.header {
+    /*background-color: #333;*/
+    border: 1px solid red;
+    /*height: 65px;*/
+}
+.logo img {
+    /*border: 1px solid red;*/
+    float: left;
+    width: 135px;
+    height: 65px;
+}
+.nav {
+    float: right;
+}
+.header li {
+    /*display: inline-block;*/
+    color: #fff;
+}

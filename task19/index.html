@@ -43,7 +43,7 @@
     // 随机生成data数组的函数
     function ran() {
         var result = []
-        for(var i = 0; i < 10; i ++) {
+        for(var i = 0; i < 60; i ++) {
             result[i] = 10 + parseInt(Math.random() * 90);
         }
         return result;
@@ -117,7 +117,7 @@
                     array[j] = array[j-1];
                     array[j-1] = temp;
                     console.log(array);
-                    sorts.push(array);
+                    sorts.push(JSON.parse(JSON.stringify(array)));
                 }
             }
         }
@@ -125,9 +125,18 @@
     }
 
     // 打印函数
-    // function rendering(array) {
-    //     var a = array
-    // }
+    function paint(array) {
+        var timer = setInterval(paint, 5);
+        function paint() {
+            var snapshot = array.shift() || [];
+            if (snapshot.length !== 0) {
+                render(snapshot);
+            } else {
+                clearInterval(timer);
+                return;
+            }
+        }
+    }
 
     // 打印排序信息
     function init() {
@@ -138,9 +147,8 @@
         // 排序快照
         var sorts = bubbleSort(data);
 
-        render(data);
-        console.log(sorts);
-        setTimeout('render(sorts.shift())', 500);
+        // 打印快照
+        paint(sorts);
     }
     init();
 </script>

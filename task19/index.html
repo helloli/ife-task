@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf8">
+    <title>task19</title>
+    <style type="text/css">
+        #boxes {
+            height: 200px;
+            border: 1px solid #ccc;
+        }
+        #boxes div {
+            height: 200px;
+            position: relative;
+            float: left;
+            width: 20px;
+            margin-right: 1px;
+        }
+        #boxes div div{
+            background-color: red;
+            text-align: center;
+            width: 20px;
+            position: absolute;
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <input type="text" id="num" />
+    <button id="leftin">左侧入</button>
+    <button id="rightin">右侧入</button>
+    <button id="leftout">左侧出</button>
+    <button id="rightout">右侧出</button>
+</div>
+<div id="boxes"></div>
+<script type="text/javascript">
+
+    // 获取DOM节点
+    var $ = function (e) {
+        return document.querySelector(e);
+    };
+
+    // 随机生成data数组的函数
+    function ran() {
+        var result = []
+        for(var i = 0; i < 10; i ++) {
+            result[i] = 10 + parseInt(Math.random() * 90);
+        }
+        return result;
+    }
+
+    // 处理输入的函数
+    function getInputValue() {
+        var val = $('#num').value;
+        if (/^\d+$/.test(val)&& val >= 10 && val <= 100) {
+            return $('#num').value;
+        } else {
+            alert('输入错误');
+            return;
+        }
+    }
+
+    // 将数组渲染到boxes里的函数
+    function render(data) {
+        if(data.length > 60) {
+            alert('队列最多只能有60个元素');
+        } else {
+            $('#boxes').innerHTML = data.map(function (e) {
+                return '<div><div style="height:' + e + 'px">'+e+'</div></div>';
+            }).join('');
+        }
+    }
+
+    // 给四个按钮绑定对应处理函数
+    $('#leftin').onclick = function () {
+        var val = getInputValue();
+        if (val){
+            data.unshift(val);
+            render();
+        }
+    }
+    $('#rightin').onclick = function () {
+        var val = getInputValue();
+        if (val){
+            data.push(val);
+            render();
+        }
+    }
+    $('#leftout').onclick = function () {
+        var result = data.shift();
+        alert(result);
+        render();
+    }
+    $('#rightout').onclick = function () {
+        var result = data.pop();
+        alert(result);
+        render();
+    }
+
+    // 给每个div绑定点击消失事件
+    $('#boxes').onclick = function(e){
+        var targetNode = e.target || e.srcElement;
+        var index = [].indexOf.call($('#boxes').children,targetNode.parentNode);
+        if (index != -1) {
+            data.splice(index, 1);
+            render();
+        }
+    };
+
+    // 冒泡排序，输入需要排序的数组，输出排序快照
+    function bubbleSort(array) {
+        var temp, sorts = [];
+        for (var i = 0, len = array.length; i < len; i ++) {
+            for(var j = len; j > i; j --) {
+                if (array[j] < array[j-1]) {
+                    temp = array[j];
+                    array[j] = array[j-1];
+                    array[j-1] = temp;
+                    console.log(array);
+                    sorts.push(array);
+                }
+            }
+        }
+        return sorts;
+    }
+
+    // 打印函数
+    // function rendering(array) {
+    //     var a = array
+    // }
+
+    // 打印排序信息
+    function init() {
+
+        // var data = [];
+        var data = ran();
+
+        // 排序快照
+        var sorts = bubbleSort(data);
+
+        render(data);
+        console.log(sorts);
+        setTimeout('render(sorts.shift())', 500);
+    }
+    init();
+</script>
+</body>
+</html>

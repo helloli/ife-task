@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf8">
+    <title>task20</title>
+    <style type="text/css">
+        #boxes div {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin: 10px;
+            padding: 0 5px;
+            float: left;
+            text-align: center;
+        }
+        .search {
+            background-color: yellow;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <textarea id="num" cols="32" rows="10"></textarea><br />
+    <button id="leftin">左侧入</button>
+    <button id="rightin">右侧入</button>
+    <button id="leftout">左侧出</button>
+    <button id="rightout">右侧出</button><br /><br />
+    <input id="keyword" type="text" />
+    <button id="search">查询</button>
+</div>
+<div id="boxes"></div>
+<script type="text/javascript">
+    var $ = function (e) {
+        return document.querySelector(e);
+    };
+
+    function getInputValue() {
+        var val = $('#num').value;
+        if (!val) {
+            alert('输入错误');
+        } else {
+            return val.replace(/^\s*/, '').replace(/\s*$/, '').split(/\s+/);
+        }
+    }
+
+    function render() {
+        var displayData = data;
+        $('#boxes').innerHTML = displayData.map(function (e) {
+            if (keyword != '') {
+                e = e.replace(new RegExp(keyword, 'g'), '<span class="search">' + keyword + '</span>');
+            }
+            return '<div>' + e + '</div>';
+        }).join('');
+    }
+
+    function init () {
+        data = ['a', 'abc', 'abcd', 'abcde', 'abcdef'];
+        keyword = '';
+        render();
+
+        $('#search').onclick = function () {
+            keyword = $('#keyword').value.replace(/^\s*/, '').replace(/\s*$/, '');
+            render();
+        };
+
+        $('#leftin').onclick = function () {
+            if (val = getInputValue()) {
+                val.reverse().map(function (e){
+                    data.unshift(e);
+                    render();
+                });
+            }
+        }
+
+        $('#rightin').onclick = function () {
+            if (val = getInputValue()) {
+                val.map(function (e){
+                    data.push(e);
+                    render();
+                });
+            }
+        }
+
+        $('#leftout').onclick = function () {
+            var result = data.shift();
+            alert(result);
+            render();
+        }
+
+        $('#rightout').onclick = function () {
+            var result = data.pop();
+            alert(result);
+            render();
+        }
+
+        $('#boxes').onclick = function(e){
+            var targetNode = e.target || e.srcElement;
+            var index = [].indexOf.call($('#boxes').children,targetNode);
+            data.splice(index, 1);
+            render();
+        };
+    }
+    init();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf8">
+    <title>task20</title>
+    <style type="text/css">
+        #tags div {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin: 10px;
+            padding: 0 5px;
+            float: left;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div id="wrap">
+    <label for="tag">Tag:<input id="tag" name="tag" /></label>
+    <div id="tags">
+        <div>HTML</div>
+        <div>CSS</div>
+        <div>JavaScript</div>
+    </div>
+</div>
+<script type="text/javascript">
+    var $ = function (e) {
+        return document.querySelector(e);
+    };
+
+    function render() {
+        $('#tags').innerHTML = data.map(function (e) {
+            return '<div>' + e + '</div>';
+        }).join('');
+    }
+
+    String.prototype.trim = function () {
+        return this.replace(/(^\s*)|(\s*$)/g, '');
+    };
+
+    function addTag(val) {
+        data.push(val.trim().replace(/\,$/, ''));
+        render();
+        $('#tag').value = '';
+    }
+
+    function getTag() {
+        return $('#tag').value.replace(/^(\s|\,)*/, '');
+    }
+    function init() {
+        data = ['HTML', 'CSS', 'JavaScript'];
+        $('#tag').oninput = function () {
+            var val = getTag();
+            if (/^\w+(\s|\,)/.test(val)) {
+                addTag(val);
+            }
+        };
+        $('#tag').onkeyup = function (e) {
+            e = document.all ? window.event : event;
+            var val = getTag();
+            if (val!= '' && (e.keyCode || event.which) == 13) {
+                addTag(getTag());
+            }
+        };
+    }
+    init();
+</script>
+</body>
+</html>

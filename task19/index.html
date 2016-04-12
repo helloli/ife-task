@@ -36,7 +36,7 @@
 <script type="text/javascript">
 
     // 获取DOM节点
-    var $ = function (e) {
+    function $(e) {
         return document.querySelector(e);
     };
 
@@ -61,8 +61,9 @@
     }
 
     // 将数组渲染到boxes里的函数
-    function render(data) {
-        if(data.length > 60) {
+    function render() {
+        console.log(data);
+        if (data.length > 60) {
             alert('队列最多只能有60个元素');
         } else {
             $('#boxes').innerHTML = data.map(function (e) {
@@ -70,42 +71,6 @@
             }).join('');
         }
     }
-
-    // 给四个按钮绑定对应处理函数
-    $('#leftin').onclick = function () {
-        var val = getInputValue();
-        if (val){
-            data.unshift(val);
-            render();
-        }
-    }
-    $('#rightin').onclick = function () {
-        var val = getInputValue();
-        if (val){
-            data.push(val);
-            render();
-        }
-    }
-    $('#leftout').onclick = function () {
-        var result = data.shift();
-        alert(result);
-        render();
-    }
-    $('#rightout').onclick = function () {
-        var result = data.pop();
-        alert(result);
-        render();
-    }
-
-    // 给每个div绑定点击消失事件
-    $('#boxes').onclick = function(e){
-        var targetNode = e.target || e.srcElement;
-        var index = [].indexOf.call($('#boxes').children,targetNode.parentNode);
-        if (index != -1) {
-            data.splice(index, 1);
-            render();
-        }
-    };
 
     // 冒泡排序，输入需要排序的数组，输出排序快照
     function bubbleSort(array) {
@@ -127,12 +92,14 @@
     function paint(array) {
         var timer = setInterval(paint, 5);
         function paint() {
-            var snapshot = array.shift() || [];
-            if (snapshot.length !== 0) {
-                render(snapshot);
-            } else {
+            if (array.length == 0) {
+                // data = array[0];
+                console.log(data, 'data');
                 clearInterval(timer);
                 return;
+            } else {
+                data = array.shift();
+                render();
             }
         }
     }
@@ -140,14 +107,52 @@
     // 打印排序信息
     function init() {
 
-        // var data = [];
         data = ran();
+        // var data = [];
 
         // 排序快照
         sorts = bubbleSort(data);
 
         // 打印快照
         paint(sorts);
+
+        // 给四个按钮绑定对应处理函数
+        $('#leftin').onclick = function () {
+            var val = getInputValue();
+            if (val){
+                data.unshift(val);
+                render();
+            }
+        }
+        $('#rightin').onclick = function () {
+            var val = getInputValue();
+            if (val){
+                data.push(val);
+                render();
+            }
+        }
+        $('#leftout').onclick = function () {
+            var result = data.shift();
+            alert(result);
+            render();
+        }
+        $('#rightout').onclick = function () {
+            var result = data.pop();
+            alert(result);
+            render();
+        }
+
+        // 给每个div绑定点击消失事件
+        $('#boxes').onclick = function(e){
+            var targetNode = e.target || e.srcElement;
+            var index = [].indexOf.call($('#boxes').children,targetNode.parentNode);
+            if (index !== -1) {
+                data.splice(index, 1);
+            console.log(data);
+                render();
+            }
+        };
+
     }
     init();
 </script>

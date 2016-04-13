@@ -2,9 +2,9 @@
 <html>
 <head>
     <meta charset="utf8">
-    <title>task20</title>
+    <title>task21</title>
     <style type="text/css">
-        #tags div {
+        #wrap div div {
             border: 1px solid #ccc;
             border-radius: 5px;
             margin: 10px;
@@ -12,16 +12,24 @@
             float: left;
             text-align: center;
         }
+        .del {
+            background-color: red;
+        }
+        .clearfix {
+            height: 0;
+            clear: both;
+            overflow: hidden;
+        }
     </style>
 </head>
 <body>
 <div id="wrap">
     <label for="tag">Tag:<input id="tag" name="tag" /></label>
-    <div id="tags">
-        <div>HTML</div>
-        <div>CSS</div>
-        <div>JavaScript</div>
-    </div>
+    <div id="tags"></div>
+    <div class="clearfix"></div>
+    <textarea id="tr" cols="32" rows="10"></textarea><br />
+    <button id="commit">确认兴趣爱好</button>
+    <div id="newtags"></div>
 </div>
 <script type="text/javascript">
     var $ = function (e) {
@@ -39,22 +47,49 @@
     };
 
     function addTag(val) {
-        data.push(val.trim().replace(/\,$/, ''));
-        render();
-        $('#tag').value = '';
+        if (data.indexOf(val) != -1) {
+            $('#tag').value = '';
+            return;
+        } else {
+            if (data.length == 10) {
+                data.pop();
+            }
+            data.unshift(val.trim().replace(/\,$/, ''));
+            render();
+            $('#tag').value = '';
+        }
     }
 
     function getTag() {
         return $('#tag').value.replace(/^(\s|\,)*/, '');
     }
+
+    function getInputValue() {
+        var val = $('#tr').value;
+        if (val) {
+            return val.replace(/^\s*/, '').replace(/\s*$/, '').split(/\s+/);
+        }
+    }
+
+    function newRender() {
+        $('#newtags').innerHTML = newdata.map(function (e) {
+            return '<div>' + e + '</div>';
+        }).join('');
+    }
+
     function init() {
         data = ['HTML', 'CSS', 'JavaScript'];
+        render();
+        newdata = [1 ,2 ,3, 4, 5, 6, 7, 8, 9, 10, 11];
+        newRender();
+
         $('#tag').oninput = function () {
             var val = getTag();
             if (/^\w+(\s|\,)/.test(val)) {
                 addTag(val);
             }
         };
+
         $('#tag').onkeyup = function (e) {
             e = document.all ? window.event : event;
             var val = getTag();
@@ -62,6 +97,30 @@
                 addTag(getTag());
             }
         };
+
+        $('#tags').onmouseover = function (e){
+            var targetNode = e.target || e.srcElement;
+            targetNode.innerHTML = '删除' + targetNode.innerHTML;
+            targetNode.className = 'del';
+        };
+
+        $('#tags').onmouseleave = render;
+
+        $('#tags').onclick = function(e){
+            var targetNode = e.target || e.srcElement;
+            var index = [].indexOf.call($('#tags').children,targetNode);
+            data.splice(index, 1);
+            render();
+        };
+
+        $('#commit').onclick = function () {
+            if (newdata = getInputValue()) {
+                if (newdata.length > 10) {
+                    newdata = newdata.slice(0, 10);
+                }
+                newRender();
+            }
+        }
     }
     init();
 </script>
